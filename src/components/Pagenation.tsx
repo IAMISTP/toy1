@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import '@scss/components/pagenation.scss';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
 const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }: Pagination) => {
+  const lastPageNum = (Math.ceil(totalPosts/postsPerPage));
   const [startPage, setStartPage] = useState(1);
   const [endPage, setEndPage] = useState(5);
 
@@ -20,11 +22,10 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }: Paginat
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
   }
-  console.log(pageNumbers);
   return (
     <div className="pagenation" style={{ display: 'flex' }}>
       <button className="btn" onClick={() => paginate(prev => (prev === 1 ? 1 : prev - 1))}>
-        -
+      <AiOutlineLeft />
       </button>
       <nav>
         <ul className="pagination__list">
@@ -43,8 +44,8 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }: Paginat
           ))}
         </ul>
       </nav>
-      <button className="btn" onClick={() => paginate(prev => prev + 1)}>
-        +
+      <button className="btn" onClick={() => paginate(prev => prev === lastPageNum ? prev : prev + 1)}>
+        <AiOutlineRight />
       </button>
     </div>
   );
