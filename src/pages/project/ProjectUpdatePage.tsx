@@ -27,6 +27,12 @@ const ProjectUpdate = () => {
   });
 
   useEffect(() => {
+    if (edit) {
+      setUpdateData({ ...updateData, content: edit });
+    }
+  }, [edit]);
+
+  useEffect(() => {
     const unsubscribe = onSnapshot(ref, snapshot => {
       const data = snapshot.data();
       setIsLoading(false);
@@ -65,7 +71,6 @@ const ProjectUpdate = () => {
     if (editorRef.current) {
       const editorValue = editorRef.current.getInstance().getMarkdown();
       setEdit(editorValue);
-      setUpdateData({ ...updateData, content: edit });
     }
   };
 
@@ -149,7 +154,6 @@ const ProjectUpdate = () => {
           initialValue={updateData.content || ''}
           name="content"
           initialEditType="markdown"
-          useCommandShortcut={false}
           hideModeSwitch={true}
           plugins={[colorSyntax]}
           language="ko-KR"

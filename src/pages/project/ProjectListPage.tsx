@@ -17,6 +17,7 @@ const ProjectList = (): JSX.Element => {
   const postsPerPage = 19;
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
+
   const ref = query(projectCollection, orderBy('writeDate', 'desc'));
   const loginState = useSelector((state: State) => state.loginUpdate);
 
@@ -29,12 +30,16 @@ const ProjectList = (): JSX.Element => {
     if (queryResult.isSuccess) {
       setPosts(snapshot?.docs);
     }
-  }, [queryResult.status]);
+  }, [queryResult.data, queryResult.isSuccess]);
 
-  const currentPosts = (posts: DocumentData) => {
-    let currentPosts = 0;
-    currentPosts = posts.slice(indexOfFirst, indexOfLast);
-    return currentPosts;
+  const currentPosts = (posts: DocumentData | undefined) => {
+    if(posts){
+      let currentPosts:DocumentData[] = [];
+      currentPosts = posts.slice(indexOfFirst, indexOfLast);
+      return currentPosts.map( (docSnapshot: DocumentData, index: number) => 
+      <Project docSnapshot={docSnapshot} key={index}/>
+     );
+    }
   };
 
   return (
@@ -52,7 +57,7 @@ const ProjectList = (): JSX.Element => {
       </article>
       <article className="section__project-container">
         {queryResult.isLoading && <div>Loading...</div>}
-        {queryResult.isSuccess && <Project posts={posts && currentPosts(posts)} />}
+        {queryResult.isSuccess && currentPosts(posts)}
       </article>
 
       <Pagination
